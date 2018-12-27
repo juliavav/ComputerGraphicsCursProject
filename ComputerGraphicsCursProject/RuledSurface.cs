@@ -80,16 +80,7 @@ namespace ComputerGraphicsCursProject
                 b2.DrawMarkers(preobr, g);
                 b3.DrawMarkers(preobr, g);
                 b4.DrawMarkers(preobr, g);
-
-                Pen pen2 = new Pen(Color.Blue, 1f);
-                for (int i = 0; i < 8; i++)
-                {
-                    if (i < 2) g.DrawLine(pen2, (int)tempb1.DataPoints[i].x, (int)tempb1.DataPoints[i].y, (int)tempb1.DataPoints[i + 1].x, (int)tempb1.DataPoints[i + 1].y);
-                    if (i > 1 && i < 4) g.DrawLine(pen2, (int)tempb2.DataPoints[i - 2].x, (int)tempb2.DataPoints[i - 2].y, (int)tempb2.DataPoints[i - 2 + 1].x, (int)tempb2.DataPoints[i - 2 + 1].y);
-                    if (i > 3 && i < 6) g.DrawLine(pen2, (int)tempb3.DataPoints[i - 4].x, (int)tempb3.DataPoints[i - 4].y, (int)tempb3.DataPoints[i - 4 + 1].x, (int)tempb3.DataPoints[i - 4 + 1].y);
-                    if (i > 5) g.DrawLine(pen2, (int)tempb4.DataPoints[i - 6].x, (int)tempb4.DataPoints[i - 6].y, (int)tempb4.DataPoints[i - 6 + 1].x, (int)tempb4.DataPoints[i - 6 + 1].y);
-                }
-
+                
                 if (dataPointCount != 12)
                 {
                     RectangleF rectangle = new RectangleF();
@@ -110,7 +101,7 @@ namespace ComputerGraphicsCursProject
                     {
                         rectangle = new RectangleF((int)tempb4.DataPoints[dataPointCount - 9].x - 5, (int)tempb4.DataPoints[dataPointCount - 9].y - 5, (float)10, (float)10);
                     }
-                    g.FillEllipse(Brushes.Red, rectangle);
+                    g.FillEllipse(Brushes.DarkOrange, rectangle);
                 }
             }
         }

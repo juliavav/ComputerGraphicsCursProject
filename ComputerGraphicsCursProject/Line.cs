@@ -42,7 +42,7 @@ namespace ComputerGraphicsCursProject
             return new Point(x, y, z, 1);
         }
 
-        static public Line operator *(Matrix m, Line l)
+        public static Line operator *(Matrix m, Line l)
         {
             Point[] dataPoints1 = new Point[2];
             for (int i = 0; i < 2; i++)
@@ -60,11 +60,10 @@ namespace ComputerGraphicsCursProject
 
             for (int i = 0; i < drawingPoints.Length - 1; i++)
             {
-                g.DrawLine(pen, (int)l.drawingPoints[i].x, (int)l.drawingPoints[i].y, (int)l.drawingPoints[i + 1].x, (int)l.drawingPoints[i + 1].y);
+                g.DrawLine(pen, (int) l.drawingPoints[i].x, (int) l.drawingPoints[i].y, (int) l.drawingPoints[i + 1].x,
+                    (int) l.drawingPoints[i + 1].y);
             }
         }
-
-
 
 
         private int numberOfDrawPoints;
@@ -72,4 +71,3 @@ namespace ComputerGraphicsCursProject
         public Point[] drawingPoints;
     }
 }
-

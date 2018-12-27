@@ -5,11 +5,11 @@ namespace ComputerGraphicsCursProject
     internal class BezierCurve
     {
         private Point[] dataPoints;
-        private readonly int NumberOfDrawPoints;
+        private readonly int numberOfDrawPoints;
 
         public BezierCurve(Point[] points, int numberOfDrawPoints)
         {
-            NumberOfDrawPoints = numberOfDrawPoints;
+            this.numberOfDrawPoints = numberOfDrawPoints;
             dataPoints = points;
             Invalidate();
         }
@@ -42,15 +42,15 @@ namespace ComputerGraphicsCursProject
             for (var i = 0; i < 3; i++)
                 dataPoints1[i] = m * b.DataPoints[i];
 
-            return new BezierCurve(dataPoints1, b.NumberOfDrawPoints);
+            return new BezierCurve(dataPoints1, b.numberOfDrawPoints);
         }
 
         public void Invalidate()
         {
-            DrawingPoints = new Point[NumberOfDrawPoints + 1];
-            double dt = 1f / NumberOfDrawPoints;
+            DrawingPoints = new Point[numberOfDrawPoints + 1];
+            double dt = 1f / numberOfDrawPoints;
             double t = 0f;
-            for (var i = 0; i <= NumberOfDrawPoints; i++)
+            for (var i = 0; i <= numberOfDrawPoints; i++)
             {
                 DrawingPoints[i] = B(t);
                 t += dt;

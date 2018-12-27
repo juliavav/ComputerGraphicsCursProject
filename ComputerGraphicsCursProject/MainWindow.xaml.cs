@@ -33,13 +33,13 @@ namespace ComputerGraphicsCursProject
 
 
             dataPointCount = 0;
-            withMarkers = checkBoxOfMerkersEnabled.IsPressed;
-            
+            //withMarkers = checkBoxOfMerkersEnabled.IsPressed;
+            withMarkers = true;
             //panelOfApproximation.Enabled = checkBoxOfMerkersEnabled.Checked;
             //panelOfDataPoints.Enabled = checkBoxOfMerkersEnabled.Checked;
             textBoxOfNumberOfDrawPoints.Text = Convert.ToString(40);
 
-            dataPoints1 = new Point[4];
+            dataPoints1 = new Point[3];
             Point point11 = new Point(0, 0, 0, 1); // точки дефолтные 
             Point point12 = new Point(1, -1, 0, 1);
             Point point14 = new Point(3, -1, 0, 1);
@@ -48,7 +48,7 @@ namespace ComputerGraphicsCursProject
             dataPoints1[1] = point12;
             dataPoints1[2] = point14;
 
-            dataPoints2 = new Point[4];
+            dataPoints2 = new Point[3];
             Point point21 = new Point(0, 0, 1, 1);
             Point point22 = new Point(1, -1, 1, 1);
             Point point24 = new Point(3, -1, 1, 1);
@@ -57,18 +57,18 @@ namespace ComputerGraphicsCursProject
             dataPoints2[1] = point22;
             dataPoints2[2] = point24;
 
-            dataPoints3 = new Point[4];
+            dataPoints3 = new Point[3];
             Point point31 = new Point(0, 0, 1, 1);
-            Point point32 = new Point(1, 1, 1, 1);
+            Point point32 = new Point(0, 0, 1, 1);
             Point point34 = new Point(0, 0, 0, 1);
 
             dataPoints3[0] = point31;
             dataPoints3[1] = point32;
             dataPoints3[2] = point34;
 
-            dataPoints4 = new Point[4];
+            dataPoints4 = new Point[3];
             Point point41 = new Point(3, -1, 1, 1);
-            Point point42 = new Point(3, 1, 1, 1);
+            Point point42 = new Point(3, -1, 1, 1);
             Point point44 = new Point(3, -1, 0, 1);
 
             dataPoints4[0] = point41;
@@ -102,6 +102,7 @@ namespace ComputerGraphicsCursProject
         {
             bezierCurve1 = new BezierCurve(dataPoints1, int.Parse(textBoxOfNumberOfDrawPoints.Text));
             bezierCurve2 = new BezierCurve(dataPoints2, int.Parse(textBoxOfNumberOfDrawPoints.Text));
+            //bezierCurve2 = new Line();
             bezierCurve3 = new BezierCurve(dataPoints3, int.Parse(textBoxOfNumberOfDrawPoints.Text));
             bezierCurve4 = new BezierCurve(dataPoints4, int.Parse(textBoxOfNumberOfDrawPoints.Text));
 
