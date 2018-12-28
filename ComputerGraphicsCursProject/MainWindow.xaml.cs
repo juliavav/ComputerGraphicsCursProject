@@ -31,12 +31,19 @@ namespace ComputerGraphicsCursProject
         private double lastX=0;
         private double lastY = 0;
         private double lastZ = 0;
+        private SlideStates[] states= new SlideStates[6];
+        private SlideStates[] lasts = new SlideStates[6];
         public MainWindow()
         {
             InitializeComponent();
             this.KeyDown += OnKeyDown;
             dataPointCount = 0;
             withMarkers = true;
+            for (int i = 0; i < 6; ++i)
+            {
+                states[i]=new SlideStates();
+                lasts[i]=new SlideStates();
+            }
             //panelOfApproximation.Enabled = checkBoxOfMerkersEnabled.Checked;
             //panelOfDataPoints.Enabled = checkBoxOfMerkersEnabled.Checked;
             textBoxOfNumberOfDrawPoints.Text = Convert.ToString(40);
@@ -93,7 +100,25 @@ namespace ComputerGraphicsCursProject
         {
             if (e.Key == Key.Space)
             {
-                dataPointCount = dataPointCount < 12 ? dataPointCount + 1 : 0;
+                SliderX.ValueChanged -= SliderX_OnValueChanged;
+                SliderY.ValueChanged -= SliderY_OnValueChanged;
+                SliderZ.ValueChanged -= SliderZ_OnValueChanged;
+                lasts[dataPointCount].X=lastX;
+                lasts[dataPointCount].Y = lastY;
+                lasts[dataPointCount].Z = lastZ;
+                states[dataPointCount].X = SliderX.Value;
+                states[dataPointCount].Y = SliderY.Value;
+                states[dataPointCount].Z = SliderZ.Value;
+                dataPointCount = dataPointCount < 5 ? dataPointCount + 1 : 0;
+                SliderX.Value = states[dataPointCount].X;
+                SliderY.Value = states[dataPointCount].Y;
+                SliderZ.Value = states[dataPointCount].Z;
+                lastX = lasts[dataPointCount].X;
+                lastY = lasts[dataPointCount].Y; 
+                lastZ = lasts[dataPointCount].Z;
+                SliderX.ValueChanged += SliderX_OnValueChanged;
+                SliderY.ValueChanged += SliderY_OnValueChanged;
+                SliderZ.ValueChanged += SliderZ_OnValueChanged;
                 form.Refresh();
             }
         }
@@ -112,10 +137,10 @@ namespace ComputerGraphicsCursProject
 
         private void CalcCurves()
         {
-            bezierCurve1 = new BezierCurve(dataPoints1, int.Parse(textBoxOfNumberOfDrawPoints.Text));
-            bezierCurve2 = new BezierCurve(dataPoints2, int.Parse(textBoxOfNumberOfDrawPoints.Text));
-            bezierCurve3 = new BezierCurve(dataPoints3, int.Parse(textBoxOfNumberOfDrawPoints.Text));
-            bezierCurve4 = new BezierCurve(dataPoints4, int.Parse(textBoxOfNumberOfDrawPoints.Text));
+            bezierCurve1 = new BezierCurve(dataPoints1, int.Parse(textBoxOfNumberOfDrawPoints.Text), false);
+            bezierCurve2 = new BezierCurve(dataPoints2, int.Parse(textBoxOfNumberOfDrawPoints.Text), false);
+            bezierCurve3 = new BezierCurve(dataPoints3, int.Parse(textBoxOfNumberOfDrawPoints.Text), true);
+            bezierCurve4 = new BezierCurve(dataPoints4, int.Parse(textBoxOfNumberOfDrawPoints.Text), true);
             kuntzSurface = new RuledSurface(bezierCurve1, bezierCurve2, bezierCurve3, bezierCurve4);
         }
 

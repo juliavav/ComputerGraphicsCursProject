@@ -13,11 +13,14 @@
         </Grid.ColumnDefinitions>
         <Grid Column="0" Margin="10" Background="AliceBlue">
             <Grid.RowDefinitions>
-                <RowDefinition Height="0.3*" />
-                <RowDefinition Height="0.3*" />
+                <RowDefinition Height="0.15*" />
+                <RowDefinition Height="0.15*" />
+                <RowDefinition Height="0.12*" />
                 <RowDefinition Height="0.8*" />
             </Grid.RowDefinitions>
-            <StackPanel Grid.Row="2">
+            <TextBlock Margin="5" FontSize="20" VerticalAlignment="Center">Редактирование:</TextBlock>
+            <TextBlock Margin="5" Grid.Row="1" FontSize="15" VerticalAlignment="Bottom">Точность аппроксимации:</TextBlock>
+            <StackPanel Grid.Row="3">
                 <TextBlock Margin="10" FontSize="15">Смещение точки по X</TextBlock>
                 <Slider Name="SliderX" IsSnapToTickEnabled="True" TickFrequency="0.1" Minimum="-5" Maximum="5" ValueChanged="SliderX_OnValueChanged" Value="0" ></Slider>
                 <TextBlock Margin="10" FontSize="15">Смещение точки по Y</TextBlock>
@@ -25,25 +28,26 @@
                 <TextBlock Margin="10" FontSize="15">Смещение точки по Z</TextBlock>
                 <Slider Name="SliderZ" IsSnapToTickEnabled="True" TickFrequency="0.1" Minimum="-5" Maximum="5" ValueChanged="SliderZ_OnValueChanged" Value="0" ></Slider>
             </StackPanel>
-            <DockPanel  Grid.Row="1">
+            <DockPanel  Grid.Row="2">
                 <TextBlock></TextBlock>
-              <TextBox TextAlignment="Center" 
+              <TextBox TextAlignment="Center"
+                       Margin="5"
                          FontSize="15" 
-                         Margin="10" 
                          Name="textBoxOfNumberOfDrawPoints" 
-                        VerticalAlignment="Center"
-                         HorizontalAlignment="Left" 
+                         VerticalAlignment="Center"
+                         HorizontalAlignment="Center" 
                          Text="40" 
                          Width="105" />
-                <Button Margin="10" 
+                <Button Margin="5" 
+                        Background="White"
+                        BorderBrush="Yellow"
+                        BorderThickness="2"
                         FontSize="15" 
                         Name="buttonOfApply1" 
                         Click="buttonOfApply1_Click" 
                         Content="Построить" 
-                        HorizontalAlignment="Right"
+                        HorizontalAlignment="Center"
                         VerticalAlignment="Center"/>
-                
-            
             </DockPanel>
             
         </Grid>

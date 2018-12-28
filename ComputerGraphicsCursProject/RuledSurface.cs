@@ -35,7 +35,7 @@ namespace ComputerGraphicsCursProject
             tempb3 = preobr * b3;
             tempb4 = preobr * b4;
 
-            Pen pen = new Pen(Color.AliceBlue, 2f);
+            Pen pen = new Pen(Color.AliceBlue, 1f);
 
             double dt = 1f / (tempb1.DrawingPoints.Length - 2);
 
@@ -100,7 +100,7 @@ namespace ComputerGraphicsCursProject
                     {
                         rectangle = new RectangleF((int)tempb4.DataPoints[dataPointCount - 9].x - 5, (int)tempb4.DataPoints[dataPointCount - 9].y - 5, (float)10, (float)10);
                     }
-                    g.FillEllipse(Brushes.DarkOrange, rectangle);
+                    g.FillEllipse(Brushes.Yellow, rectangle);
                 }
             }
         }
