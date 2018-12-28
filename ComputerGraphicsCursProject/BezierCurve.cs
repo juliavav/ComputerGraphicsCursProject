@@ -70,7 +70,7 @@ namespace ComputerGraphicsCursProject
 
         public void Draw(Matrix preobr, Graphics g)
         {
-            var pen = new Pen(Color.Red, 2f);
+            var pen = new Pen(Color.DarkOrange, 2f);
             BezierCurve b;
             b = preobr * this;
 
@@ -87,7 +87,7 @@ namespace ComputerGraphicsCursProject
             {
                 var rectangle = new RectangleF((int) b.dataPoints[i].x - 5, (int) b.dataPoints[i].y - 5,
                     10, 10);
-                g.FillEllipse(Brushes.Black, rectangle);
+                g.FillEllipse(Brushes.AliceBlue, rectangle);
             }
         }
     }

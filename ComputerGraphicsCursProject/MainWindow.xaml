@@ -6,37 +6,53 @@
         xmlns:local="clr-namespace:ComputerGraphicsCursProject"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
+    <Grid Background="LightSlateGray">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0.5*" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <Grid Column="0">
+        <Grid Column="0" Margin="10" Background="AliceBlue">
             <Grid.RowDefinitions>
-                <RowDefinition Height="0.3*" />
                 <RowDefinition Height="0.3*" />
                 <RowDefinition Height="0.3*" />
                 <RowDefinition Height="0.8*" />
             </Grid.RowDefinitions>
-            <Button Name="mashtabPlusButton" Click="mashtabPlusButton_Click" Content="+" HorizontalAlignment="Left" Height="54" Margin="164,10,0,0" VerticalAlignment="Top" Width="91"/>
-            <Button Name="mashtabMinusButton" Click="mashtabMinusButton_Click" Content="-" HorizontalAlignment="Left" Height="54" Margin="64,10,0,0" VerticalAlignment="Top" Width="95"/>
-            <Button Name="checkBoxOfMerkersEnabled" Click="checkBoxOfMerkersEnabled_CheckedChanged" Content="режим редактирования" HorizontalAlignment="Left" Height="38" Margin="100,10,0,0" Grid.Row="1" VerticalAlignment="Top" Width="155"/>
-            <Button Name="buttonOfApply1" Click="buttonOfApply1_Click" Content="применить" HorizontalAlignment="Left" Height="40" Margin="134,24.333,0,0" Grid.Row="2" VerticalAlignment="Top" Width="94"/>
-            <TextBox Name="textBoxOfNumberOfDrawPoints" HorizontalAlignment="Left" Height="40" Margin="25,24.333,0,0" Grid.Row="2" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="75"/>
-            <Button Name="buttonDown" Click="buttonDown_Click" Content="вниз" HorizontalAlignment="Left" Height="31" Margin="159,22.333,0,0" Grid.Row="3" VerticalAlignment="Top" Width="82"/>
-            <Button Name="buttonRight" Click="buttonRight_Click" Content="вправо" HorizontalAlignment="Left" Height="31" Margin="159,73.333,0,0" Grid.Row="3" VerticalAlignment="Top" Width="82"/>
-            <Button Name="buttonOtNas" Click="buttonOtNas_Click" Content="Х" HorizontalAlignment="Left" Height="31" Margin="159,125.333,0,0" Grid.Row="3" VerticalAlignment="Top" Width="82"/>
-            <Button Name="buttonUp" Click="buttonUp_Click" Content="вверх" HorizontalAlignment="Left" Height="31" Margin="51,22.333,0,0" Grid.Row="3" VerticalAlignment="Top" Width="82"/>
-            <Button Name="buttonLeft" Click="buttonLeft_Click" Content="влево" HorizontalAlignment="Left" Height="31" Margin="51,73.333,0,0" Grid.Row="3" VerticalAlignment="Top" Width="82"/>
-            <Button Name="buttonNaNas" Click="buttonNaNas_Click" Content="*" HorizontalAlignment="Left" Height="31" Margin="51,125.333,0,0" Grid.Row="3" VerticalAlignment="Top" Width="82"/>
-            <Button Name="buttonOfDataPointCounter" Click="buttonOfDataPointCounter_Click" Content="след точка" HorizontalAlignment="Left" Height="31" Margin="100,161.333,0,0" Grid.Row="3" VerticalAlignment="Top" Width="82"/>
+            <StackPanel Grid.Row="2">
+                <TextBlock Margin="10" FontSize="15">Смещение точки по X</TextBlock>
+                <Slider Name="SliderX" IsSnapToTickEnabled="True" TickFrequency="0.1" Minimum="-5" Maximum="5" ValueChanged="SliderX_OnValueChanged" Value="0" ></Slider>
+                <TextBlock Margin="10" FontSize="15">Смещение точки по Y</TextBlock>
+                <Slider Name="SliderY" IsSnapToTickEnabled="True" TickFrequency="0.1" Minimum="-5" Maximum="5" ValueChanged="SliderY_OnValueChanged" Value="0" ></Slider>
+                <TextBlock Margin="10" FontSize="15">Смещение точки по Z</TextBlock>
+                <Slider Name="SliderZ" IsSnapToTickEnabled="True" TickFrequency="0.1" Minimum="-5" Maximum="5" ValueChanged="SliderZ_OnValueChanged" Value="0" ></Slider>
+            </StackPanel>
+            <DockPanel  Grid.Row="1">
+                <TextBlock></TextBlock>
+              <TextBox TextAlignment="Center" 
+                         FontSize="15" 
+                         Margin="10" 
+                         Name="textBoxOfNumberOfDrawPoints" 
+                        VerticalAlignment="Center"
+                         HorizontalAlignment="Left" 
+                         Text="40" 
+                         Width="105" />
+                <Button Margin="10" 
+                        FontSize="15" 
+                        Name="buttonOfApply1" 
+                        Click="buttonOfApply1_Click" 
+                        Content="Построить" 
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"/>
+                
+            
+            </DockPanel>
+            
         </Grid>
         <Grid Column="1">
             <WindowsFormsHost
                 x:Name="Host"
                 HorizontalAlignment="Stretch" 
                 VerticalAlignment="Stretch" 
-                Background="White" 
+                Background="LightSlateGray" 
                 Initialized="HostInitialized">
             </WindowsFormsHost>
         </Grid>

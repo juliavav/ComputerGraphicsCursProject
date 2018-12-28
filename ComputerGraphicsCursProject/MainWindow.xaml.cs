@@ -10,11 +10,13 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Forms;
 using System.Windows.Forms.Integration;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using KeyEventArgs = System.Windows.Forms.KeyEventArgs;
 using MouseEventArgs = System.Windows.Input.MouseEventArgs;
 
 
@@ -25,15 +27,15 @@ namespace ComputerGraphicsCursProject
     /// </summary>
     public partial class MainWindow : Window
     {
-       // private System.Windows.Forms.Form form = new Form();
-       private PictureBox form = new PictureBox();
+        private PictureBox form = new PictureBox();
+        private double lastX=0;
+        private double lastY = 0;
+        private double lastZ = 0;
         public MainWindow()
         {
             InitializeComponent();
-
-
+            this.KeyDown += OnKeyDown;
             dataPointCount = 0;
-            //withMarkers = checkBoxOfMerkersEnabled.IsPressed;
             withMarkers = true;
             //panelOfApproximation.Enabled = checkBoxOfMerkersEnabled.Checked;
             //panelOfDataPoints.Enabled = checkBoxOfMerkersEnabled.Checked;
@@ -59,7 +61,7 @@ namespace ComputerGraphicsCursProject
 
             dataPoints3 = new Point[3];
             Point point31 = new Point(0, 0, 1, 1);
-            Point point32 = new Point(0, 0, 1, 1);
+            Point point32 = new Point(0, 0, 0.5, 1);
             Point point34 = new Point(0, 0, 0, 1);
 
             dataPoints3[0] = point31;
@@ -68,7 +70,7 @@ namespace ComputerGraphicsCursProject
 
             dataPoints4 = new Point[3];
             Point point41 = new Point(3, -1, 1, 1);
-            Point point42 = new Point(3, -1, 1, 1);
+            Point point42 = new Point(3, -1, 0.5, 1);
             Point point44 = new Point(3, -1, 0, 1);
 
             dataPoints4[0] = point41;
@@ -87,42 +89,37 @@ namespace ComputerGraphicsCursProject
 
             isMouseDown = false;
         }
+        void OnKeyDown(object o, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == Key.Space)
+            {
+                dataPointCount = dataPointCount < 12 ? dataPointCount + 1 : 0;
+                form.Refresh();
+            }
+        }
         private void HostInitialized(object sender, EventArgs e)
         {
+            
             ((WindowsFormsHost)sender).Child = form;
             Host.Child.Paint += Form1_Paint;
             Host.Child.MouseDown += Form1_MouseDown;
             Host.Child.MouseMove += Form1_MouseMove;
+            Host.Child.MouseWheel += Form1_MouseWheel;
             Host.Child.MouseUp += Form1_MouseUp;
             Host.Child.SizeChanged += Form1_SizeChanged;
-            
+
         }
 
         private void CalcCurves()
         {
             bezierCurve1 = new BezierCurve(dataPoints1, int.Parse(textBoxOfNumberOfDrawPoints.Text));
             bezierCurve2 = new BezierCurve(dataPoints2, int.Parse(textBoxOfNumberOfDrawPoints.Text));
-            //bezierCurve2 = new Line();
             bezierCurve3 = new BezierCurve(dataPoints3, int.Parse(textBoxOfNumberOfDrawPoints.Text));
             bezierCurve4 = new BezierCurve(dataPoints4, int.Parse(textBoxOfNumberOfDrawPoints.Text));
-
             kuntzSurface = new RuledSurface(bezierCurve1, bezierCurve2, bezierCurve3, bezierCurve4);
         }
 
-        private void mashtabMinusButton_Click(object sender, EventArgs e)
-        {
-            mashtabK--;
-            form.Refresh();
-            //ExtensionMethods.Refresh(this);
-        }
-
-        private void mashtabPlusButton_Click(object sender, EventArgs e)
-        {
-            mashtabK++;
-            this.Host.Child.Refresh();
-            //ExtensionMethods.Refresh(this);
-        }
-
+        
 
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
@@ -130,14 +127,13 @@ namespace ComputerGraphicsCursProject
             double zoomLevel = (scale + mashtabK) / 1000;
             double coeff = Math.Max(e.ClipRectangle.Width, e.ClipRectangle.Height) * zoomLevel;
 
-            ShiftMatrix sh = new ShiftMatrix(e.ClipRectangle.Width / 2, e.ClipRectangle.Height / 2, 0);
+            ShiftMatrix sh = new ShiftMatrix(e.ClipRectangle.Width / 2f, e.ClipRectangle.Height / 2f, 0);
             ScalingMatrix sc = new ScalingMatrix(coeff, coeff, coeff);
             RotationMatrix rtx = new RotationMatrix('X', my * Math.PI / 180.0);
             RotationMatrix rty = new RotationMatrix('Y', -mx * Math.PI / 180.0);
             Matrix preobr = sh * rtx * rty * sc;
 
             kuntzSurface.Draw(preobr, e.Graphics, dataPointCount, withMarkers);
-            // else linearSurface.Draw(preobr, e.Graphics, dataPointCount, withMarkers);
 
         }
 
@@ -155,6 +151,12 @@ namespace ComputerGraphicsCursProject
             }
         }
 
+        private void Form1_MouseWheel(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            mashtabK += e.Delta;
+            form.Refresh();
+        }
+
         private void Form1_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
         {
             isMouseDown = true;
@@ -169,7 +171,6 @@ namespace ComputerGraphicsCursProject
 
         private void Form1_SizeChanged(object sender, EventArgs e)
         {
-            //this.Refresh();
             form.Refresh();
         }
 
@@ -179,145 +180,7 @@ namespace ComputerGraphicsCursProject
             form.Refresh();
             //ExtensionMethods.Refresh(this);
         }
-
-        private void buttonRight_Click(object sender, EventArgs e)
-        {
-            if (dataPointCount < 3) dataPoints1[dataPointCount].x += 1;
-            if (dataPointCount > 2 && dataPointCount < 6) dataPoints2[dataPointCount - 3].x += 1;
-            if (dataPointCount > 5 && dataPointCount < 9) dataPoints3[dataPointCount - 6].x += 1;
-            if (dataPointCount > 8 && dataPointCount < 12) dataPoints4[dataPointCount - 9].x += 1;
-
-            if (dataPointCount == 0) dataPoints3[dataPointCount + 2].x += 1;
-            if (dataPointCount == 2) dataPoints4[dataPointCount].x += 1;
-            if (dataPointCount == 5) dataPoints4[dataPointCount - 5].x += 1;
-            if (dataPointCount == 3) dataPoints3[dataPointCount - 3].x += 1;
-
-            if (dataPointCount == 8) dataPoints1[dataPointCount - 8].x += 1;
-            if (dataPointCount == 6) dataPoints2[dataPointCount - 6].x += 1;
-            if (dataPointCount == 9) dataPoints2[dataPointCount - 7].x += 1;
-
-            if (dataPointCount == 11) dataPoints1[dataPointCount - 9].x += 1;
-
-            CalcCurves();
-            form.Refresh();
-            //ExtensionMethods.Refresh(this);
-        }
-
-        private void buttonLeft_Click(object sender, EventArgs e)
-        {
-            if (dataPointCount < 3) dataPoints1[dataPointCount].x -= 1;
-            if (dataPointCount > 2 && dataPointCount < 6) dataPoints2[dataPointCount - 3].x -= 1;
-            if (dataPointCount > 5 && dataPointCount < 9) dataPoints3[dataPointCount - 6].x -= 1;
-            if (dataPointCount > 8 && dataPointCount < 12) dataPoints4[dataPointCount - 9].x -= 1;
-
-            if (dataPointCount == 0) dataPoints3[dataPointCount + 2].x -= 1;
-            if (dataPointCount == 2) dataPoints4[dataPointCount].x -= 1;
-            if (dataPointCount == 5) dataPoints4[dataPointCount - 5].x -= 1;
-            if (dataPointCount == 3) dataPoints3[dataPointCount - 3].x -= 1;
-
-            if (dataPointCount == 8) dataPoints1[dataPointCount - 8].x -= 1;
-            if (dataPointCount == 6) dataPoints2[dataPointCount - 6].x -= 1;
-            if (dataPointCount == 9) dataPoints2[dataPointCount - 7].x -= 1;
-
-            if (dataPointCount == 11) dataPoints1[dataPointCount - 9].x -= 1;
-
-            CalcCurves();
-            form.Refresh();
-            //ExtensionMethods.Refresh(this);
-        }
-
-        private void buttonNaNas_Click(object sender, EventArgs e)
-        {
-            if (dataPointCount < 3) dataPoints1[dataPointCount].z -= 1;
-            if (dataPointCount > 2 && dataPointCount < 6) dataPoints2[dataPointCount - 3].z -= 1;
-            if (dataPointCount > 5 && dataPointCount < 9) dataPoints3[dataPointCount - 6].z -= 1;
-            if (dataPointCount > 8 && dataPointCount < 12) dataPoints4[dataPointCount - 9].z -= 1;
-
-            if (dataPointCount == 0) dataPoints3[dataPointCount + 2].z -= 1;
-            if (dataPointCount == 2) dataPoints4[dataPointCount].z -= 1;
-            if (dataPointCount == 5) dataPoints4[dataPointCount - 5].z -= 1;
-            if (dataPointCount == 3) dataPoints3[dataPointCount - 3].z -= 1;
-
-            if (dataPointCount == 8) dataPoints1[dataPointCount - 8].z -= 1;
-            if (dataPointCount == 6) dataPoints2[dataPointCount - 6].z -= 1;
-            if (dataPointCount == 9) dataPoints2[dataPointCount - 7].z -= 1;
-
-            if (dataPointCount == 11) dataPoints1[dataPointCount - 9].z -= 1;
-
-            CalcCurves();
-            form.Refresh();
-            //ExtensionMethods.Refresh(this);
-        }
-
-        private void buttonOtNas_Click(object sender, EventArgs e)
-        {
-            if (dataPointCount < 3) dataPoints1[dataPointCount].z += 1;
-            if (dataPointCount > 2 && dataPointCount < 6) dataPoints2[dataPointCount - 3].z += 1;
-            if (dataPointCount > 5 && dataPointCount < 9) dataPoints3[dataPointCount - 6].z += 1;
-            if (dataPointCount > 8 && dataPointCount < 12) dataPoints4[dataPointCount - 9].z += 1;
-
-            if (dataPointCount == 0) dataPoints3[dataPointCount + 2].z += 1;
-            if (dataPointCount == 2) dataPoints4[dataPointCount].z += 1;
-            if (dataPointCount == 5) dataPoints4[dataPointCount - 5].z += 1;
-            if (dataPointCount == 3) dataPoints3[dataPointCount - 3].z += 1;
-
-            if (dataPointCount == 8) dataPoints1[dataPointCount - 8].z += 1;
-            if (dataPointCount == 6) dataPoints2[dataPointCount - 6].z += 1;
-            if (dataPointCount == 9) dataPoints2[dataPointCount - 7].z += 1;
-
-            if (dataPointCount == 11) dataPoints1[dataPointCount - 9].z += 1;
-
-            CalcCurves();
-            form.Refresh();
-            //ExtensionMethods.Refresh(this);
-        }
-
-        private void buttonUp_Click(object sender, EventArgs e)
-        {
-            if (dataPointCount < 3) dataPoints1[dataPointCount].y -= 1;
-            if (dataPointCount > 2 && dataPointCount < 6) dataPoints2[dataPointCount - 3].y -= 1;
-            if (dataPointCount > 5 && dataPointCount < 9) dataPoints3[dataPointCount - 6].y -= 1;
-            if (dataPointCount > 8 && dataPointCount < 12) dataPoints4[dataPointCount - 9].y -= 1;
-
-            if (dataPointCount == 0) dataPoints3[dataPointCount + 2].y -= 1;
-            if (dataPointCount == 2) dataPoints4[dataPointCount].y -= 1;
-            if (dataPointCount == 5) dataPoints4[dataPointCount - 5].y -= 1;
-            if (dataPointCount == 3) dataPoints3[dataPointCount - 3].y -= 1;
-
-            if (dataPointCount == 8) dataPoints1[dataPointCount - 8].y -= 1;
-            if (dataPointCount == 6) dataPoints2[dataPointCount - 6].y -= 1;
-            if (dataPointCount == 9) dataPoints2[dataPointCount - 7].y -= 1;
-
-            if (dataPointCount == 11) dataPoints1[dataPointCount - 9].y -= 1;
-
-            CalcCurves();
-            form.Refresh();
-            //ExtensionMethods.Refresh(this);
-        }
-
-        private void buttonDown_Click(object sender, EventArgs e)
-        {
-            if (dataPointCount < 3) dataPoints1[dataPointCount].y += 1;
-            if (dataPointCount > 2 && dataPointCount < 6) dataPoints2[dataPointCount - 3].y += 1;
-            if (dataPointCount > 5 && dataPointCount < 9) dataPoints3[dataPointCount - 6].y += 1;
-            if (dataPointCount > 8 && dataPointCount < 12) dataPoints4[dataPointCount - 9].y += 1;
-
-            if (dataPointCount == 0) dataPoints3[dataPointCount + 2].y += 1;
-            if (dataPointCount == 2) dataPoints4[dataPointCount].y += 1;
-            if (dataPointCount == 5) dataPoints4[dataPointCount - 5].y += 1;
-            if (dataPointCount == 3) dataPoints3[dataPointCount - 3].y += 1;
-
-            if (dataPointCount == 8) dataPoints1[dataPointCount - 8].y += 1;
-            if (dataPointCount == 6) dataPoints2[dataPointCount - 6].y += 1;
-            if (dataPointCount == 9) dataPoints2[dataPointCount - 7].y += 1;
-
-            if (dataPointCount == 11) dataPoints1[dataPointCount - 9].y += 1;
-
-            CalcCurves();
-            form.Refresh();
-            //ExtensionMethods.Refresh(this);
-        }
-
+       
         // текущие координаты курсора и координаты его предыдущего положения
 
         int mx, my, cx, cy;
@@ -345,62 +208,77 @@ namespace ComputerGraphicsCursProject
 
         // LinearSurface linearSurface;
         bool withMarkers;
-
-        private void buttonOfDataPointCounter_Click(object sender, EventArgs e)
+        
+        private void SliderX_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            if (dataPointCount < 12)
-            {
-                dataPointCount++;
-                if (dataPointCount == 12)
-                {
-                    buttonDown.IsEnabled = false;
-                    buttonUp.IsEnabled = false;
-                    buttonRight.IsEnabled = false;
-                    buttonLeft.IsEnabled = false;
-                    buttonNaNas.IsEnabled = false;
-                    buttonOtNas.IsEnabled = false;
-                }
-            }
-            else
-            {
-                dataPointCount = 0;
-                buttonDown.IsEnabled = true;
-                buttonUp.IsEnabled = true;
-                buttonRight.IsEnabled = true;
-                buttonLeft.IsEnabled = true;
-                buttonNaNas.IsEnabled = true;
-                buttonOtNas.IsEnabled = true;
-            }
+            double delta = SliderX.Value - lastX;
+            if (dataPointCount < 3) dataPoints1[dataPointCount].x += delta;
+            if (dataPointCount > 2 && dataPointCount < 6) dataPoints2[dataPointCount - 3].x += delta;
+            if (dataPointCount > 5 && dataPointCount < 9) dataPoints3[dataPointCount - 6].x += delta;
+            if (dataPointCount > 8 && dataPointCount < 12) dataPoints4[dataPointCount - 9].x += delta;
+
+            if (dataPointCount == 0) dataPoints3[dataPointCount + 2].x += delta;
+            if (dataPointCount == 2) dataPoints4[dataPointCount].x += delta;
+            if (dataPointCount == 5) dataPoints4[dataPointCount - 5].x += delta;
+            if (dataPointCount == 3) dataPoints3[dataPointCount - 3].x += delta;
+
+            if (dataPointCount == 8) dataPoints1[dataPointCount - 8].x += delta;
+            if (dataPointCount == 6) dataPoints2[dataPointCount - 6].x += delta;
+            if (dataPointCount == 9) dataPoints2[dataPointCount - 7].x += delta;
+
+            if (dataPointCount == 11) dataPoints1[dataPointCount - 9].x += delta;
+
+            lastX = SliderX.Value;
+            CalcCurves();
             form.Refresh();
-            // ExtensionMethods.Refresh(this);
         }
 
-        private void checkBoxOfMerkersEnabled_CheckedChanged(object sender, EventArgs e)
+        private void SliderY_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            if (checkBoxOfMerkersEnabled.IsPressed)
-            {
-                checkBoxOfMerkersEnabled.Background = Brushes.GreenYellow;
-            }
-            else
-            {
-                checkBoxOfMerkersEnabled.Background = Brushes.Aquamarine;
-            }
+            double delta = SliderY.Value - lastY;
+            if (dataPointCount < 3) dataPoints1[dataPointCount].y += delta;
+            if (dataPointCount > 2 && dataPointCount < 6) dataPoints2[dataPointCount - 3].y +=delta;
+            if (dataPointCount > 5 && dataPointCount < 9) dataPoints3[dataPointCount - 6].y +=delta;
+            if (dataPointCount > 8 && dataPointCount < 12) dataPoints4[dataPointCount - 9].y +=delta;
 
-            //panelOfApproximation.Enabled = checkBoxOfMerkersEnabled.Checked;
-            //panelOfDataPoints.Enabled = checkBoxOfMerkersEnabled.Checked;
-            withMarkers = checkBoxOfMerkersEnabled.IsPressed;
+            if (dataPointCount == 0) dataPoints3[dataPointCount + 2].y +=delta;
+            if (dataPointCount == 2) dataPoints4[dataPointCount].y +=delta;
+            if (dataPointCount == 5) dataPoints4[dataPointCount - 5].y +=delta;
+            if (dataPointCount == 3) dataPoints3[dataPointCount - 3].y +=delta;
+
+            if (dataPointCount == 8) dataPoints1[dataPointCount - 8].y +=delta;
+            if (dataPointCount == 6) dataPoints2[dataPointCount - 6].y +=delta;
+            if (dataPointCount == 9) dataPoints2[dataPointCount - 7].y +=delta;
+
+            if (dataPointCount == 11) dataPoints1[dataPointCount - 9].y +=delta;
+
+            lastY = SliderY.Value;
+            CalcCurves();
             form.Refresh();
-            //ExtensionMethods.Refresh(this);
         }
 
-        public static class ExtensionMethods
+        private void SliderZ_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            private static readonly Action EmptyDelegate = delegate { };
+            double delta = SliderZ.Value - lastZ;
+            if (dataPointCount < 3) dataPoints1[dataPointCount].z +=delta;
+            if (dataPointCount > 2 && dataPointCount < 6) dataPoints2[dataPointCount - 3].z +=delta;
+            if (dataPointCount > 5 && dataPointCount < 9) dataPoints3[dataPointCount - 6].z +=delta;
+            if (dataPointCount > 8 && dataPointCount < 12) dataPoints4[dataPointCount - 9].z +=delta;
 
-            public static void Refresh(UIElement uiElement)
-            {
-                uiElement.Dispatcher.Invoke(DispatcherPriority.Render, EmptyDelegate);
-            }
+            if (dataPointCount == 0) dataPoints3[dataPointCount + 2].z +=delta;
+            if (dataPointCount == 2) dataPoints4[dataPointCount].z +=delta;
+            if (dataPointCount == 5) dataPoints4[dataPointCount - 5].z +=delta;
+            if (dataPointCount == 3) dataPoints3[dataPointCount - 3].z +=delta;
+
+            if (dataPointCount == 8) dataPoints1[dataPointCount - 8].z +=delta;
+            if (dataPointCount == 6) dataPoints2[dataPointCount - 6].z +=delta;
+            if (dataPointCount == 9) dataPoints2[dataPointCount - 7].z +=delta;
+
+            if (dataPointCount == 11) dataPoints1[dataPointCount - 9].z +=delta;
+
+            lastZ = SliderZ.Value;
+            CalcCurves();
+            form.Refresh();
         }
     }
 }

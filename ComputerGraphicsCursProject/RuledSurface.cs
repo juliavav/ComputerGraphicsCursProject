@@ -35,8 +35,7 @@ namespace ComputerGraphicsCursProject
             tempb3 = preobr * b3;
             tempb4 = preobr * b4;
 
-            Pen pen = new Pen(Color.Gray, 2f);
-            Pen pen1 = new Pen(Color.Red, 3f);
+            Pen pen = new Pen(Color.AliceBlue, 2f);
 
             double dt = 1f / (tempb1.DrawingPoints.Length - 2);
 
