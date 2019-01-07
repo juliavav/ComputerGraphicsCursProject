@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing.Drawing2D;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -36,6 +37,11 @@ namespace ComputerGraphicsCursProject
         public MainWindow()
         {
             InitializeComponent();
+            string file = File.ReadAllText("points.txt");
+            int[] nums = file
+                .Split(new char[] { ' ', ',' }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(n => int.Parse(n))
+                .ToArray();
             this.KeyDown += OnKeyDown;
             dataPointCount = 0;
             withMarkers = true;
@@ -49,36 +55,36 @@ namespace ComputerGraphicsCursProject
             textBoxOfNumberOfDrawPoints.Text = Convert.ToString(40);
 
             dataPoints1 = new Point[3];
-            Point point11 = new Point(0, 0, 0, 1); // точки дефолтные 
-            Point point12 = new Point(1, -1, 0, 1);
-            Point point14 = new Point(3, -1, 0, 1);
+            Point point11 = new Point(nums[0], nums[1], nums[2], 1); // точки дефолтные 
+            Point point12 = new Point(nums[3], nums[4], nums[5], 1);
+            Point point14 = new Point(nums[6], nums[7], nums[8], 1);
 
             dataPoints1[0] = point11;
             dataPoints1[1] = point12;
             dataPoints1[2] = point14;
 
             dataPoints2 = new Point[3];
-            Point point21 = new Point(0, 0, 1, 1);
-            Point point22 = new Point(1, -1, 1, 1);
-            Point point24 = new Point(3, -1, 1, 1);
+            Point point21 = new Point(nums[9], nums[10], nums[11], 1);
+            Point point22 = new Point(nums[12], nums[13], nums[14], 1);
+            Point point24 = new Point(nums[15], nums[16], nums[17], 1);
 
             dataPoints2[0] = point21;
             dataPoints2[1] = point22;
             dataPoints2[2] = point24;
 
             dataPoints3 = new Point[3];
-            Point point31 = new Point(0, 0, 1, 1);
+            Point point31 = new Point(nums[9], nums[10], nums[11], 1);
             Point point32 = new Point(0, 0, 0.5, 1);
-            Point point34 = new Point(0, 0, 0, 1);
+            Point point34 = new Point(nums[0], nums[1], nums[2], 1);
 
             dataPoints3[0] = point31;
             dataPoints3[1] = point32;
             dataPoints3[2] = point34;
 
             dataPoints4 = new Point[3];
-            Point point41 = new Point(3, -1, 1, 1);
+            Point point41 = new Point(nums[15], nums[16], nums[17], 1);
             Point point42 = new Point(3, -1, 0.5, 1);
-            Point point44 = new Point(3, -1, 0, 1);
+            Point point44 = new Point(nums[6], nums[7], nums[8], 1);
 
             dataPoints4[0] = point41;
             dataPoints4[1] = point42;
